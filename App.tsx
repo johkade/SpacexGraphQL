@@ -1,13 +1,18 @@
-import React, {useEffect} from 'react';
+import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+import React from 'react';
+import CONFIG from './app/const/config';
 import RootStack from './app/nav/rootStack/rootStack';
-import fetchRocketsWithAxios from './app/service/api/axios/fetchRocketsWithAxios';
+
+// Initialize Apollo Client
+const client = new ApolloClient({
+  uri: CONFIG.SPACEX_BASE,
+  cache: new InMemoryCache(),
+});
 
 export default function App() {
-  useEffect(() => {
-    fetchRocketsWithAxios(1, 1)
-      .then(res => console.log(JSON.stringify(res)))
-      .catch(e => console.log(e));
-  }, []);
-
-  return <RootStack />;
+  return (
+    <ApolloProvider client={client}>
+      <RootStack />
+    </ApolloProvider>
+  );
 }
