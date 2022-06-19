@@ -1,6 +1,6 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import {RootStackParamList} from '../../nav/rootStack/types';
 
 // TODO: define the route params in the paramList of the navigator you want to use this screen in:
@@ -15,7 +15,7 @@ export type HomeScreenProps = NativeStackScreenProps<
   'home'
 >;
 
-const HomeScreen = ({navigation}: HomeScreenProps) => {
+const HomeScreen = ({}: HomeScreenProps) => {
   //
   return (
     <SafeAreaView style={styles.container}>

@@ -1,6 +1,6 @@
-import * as React from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import * as React from 'react';
+import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import {RootStackParamList} from '../../nav/rootStack/types';
 // TODO: define the route params in the paramList of the navigator you want to use this screen in:
 // type RootStackParamList = {launchDetails: {userId: string}};
@@ -13,7 +13,7 @@ export type LaunchDetailsScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'launchDetails'
 >;
-const LaunchDetailsScreen = ({navigation}: LaunchDetailsScreenProps) => {
+const LaunchDetailsScreen = ({}: LaunchDetailsScreenProps) => {
   //
   return (
     <SafeAreaView style={styles.container}>

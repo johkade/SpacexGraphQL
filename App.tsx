@@ -1,6 +1,4 @@
-import {StatusBar} from 'expo-status-bar';
-import {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
 import RootStack from './app/nav/rootStack/rootStack';
 import fetchRocketsWithAxios from './app/service/api/axios/fetchRocketsWithAxios';
 
@@ -13,12 +11,3 @@ export default function App() {
 
   return <RootStack />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
