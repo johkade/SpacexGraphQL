@@ -1,6 +1,7 @@
 import {StatusBar} from 'expo-status-bar';
 import {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import RootStack from './app/nav/navigators/rootStack';
 import fetchRocketsWithAxios from './app/service/api/axios/fetchRocketsWithAxios';
 
 export default function App() {
@@ -10,12 +11,7 @@ export default function App() {
       .catch(e => console.log(e));
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  return <RootStack />;
 }
 
 const styles = StyleSheet.create({
