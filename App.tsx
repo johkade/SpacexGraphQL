@@ -1,7 +1,7 @@
 import {StatusBar} from 'expo-status-bar';
 import {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import RootStack from './app/nav/navigators/rootStack';
+import RootStack from './app/nav/rootStack/rootStack';
 import fetchRocketsWithAxios from './app/service/api/axios/fetchRocketsWithAxios';
 
 export default function App() {
