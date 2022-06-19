@@ -8,7 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "comp": "npx ignite-cli g component",
+    "screen": "npx ignite-cli g screen"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.10",
