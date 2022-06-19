@@ -1,29 +1,16 @@
-import {gql, useQuery} from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import LaunchItem from '../../components/launch-item';
 import LoadingView from '../../components/loading-view';
 import {RootStackParamList} from '../../nav/rootStack/types';
+import {LAUNCHES_QUERY} from '../../service/api/apollo/queries';
 
 export type HomeScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'home'
 >;
-
-const LAUNCHES_QUERY = gql`
-  {
-    rockets(limit: 3, offset: 1) {
-      id
-      name
-      boosters
-      company
-      diameter {
-        meters
-      }
-    }
-  }
-`;
 
 type RenderItemParams = {
   item: {id: string; name: string};
