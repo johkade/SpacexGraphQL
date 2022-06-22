@@ -1,4 +1,4 @@
-import spacexAxios from './axios';
+import spaceXAxios from './axios';
 
 const fetchRocketsWithAxios = async (
   limit: number = 20,
@@ -11,7 +11,7 @@ const fetchRocketsWithAxios = async (
         }
     }`;
 
-  const response = await spacexAxios.post('', {
+  const response = await spaceXAxios.post('', {
     query,
   });
   return Promise.resolve(response.data);

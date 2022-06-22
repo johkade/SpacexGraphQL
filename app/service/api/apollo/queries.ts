@@ -1,14 +1,12 @@
 import {gql} from '@apollo/client';
 
 export const LAUNCHES_QUERY = gql`
-  {
-    rockets(limit: 20, offset: 0) {
+  query launches {
+    launches(limit: 30) {
       id
-      name
-      boosters
-      company
-      diameter {
-        meters
+      mission_name
+      links {
+        mission_patch_small
       }
     }
   }
