@@ -1,38 +1,39 @@
-import {useQuery} from '@apollo/client';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
-import LaunchItem from '../../components/launch-item';
-import LoadingView from '../../components/loading-view';
+import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import Card from '../../components/card';
 import {RootStackParamList} from '../../nav/rootStack/types';
-import {LAUNCHES_QUERY} from '../../service/api/apollo/queries';
 
 export type HomeScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'home'
 >;
 
-type RenderItemParams = {
-  item: {id: string; name: string};
-  index: number;
-};
+// const renderLaunchItem: ListRenderItem<Launch> = ({item, index}) => {
+//   return <LaunchItem name={item.mission_name} key={index.toString()} />;
+// };
 
-const HomeScreen = ({}: HomeScreenProps) => {
-  const {data, loading} = useQuery(LAUNCHES_QUERY);
+type RouteNameType = (keyof RootStackParamList)[];
+const clients: RouteNameType = ['apollo', 'relay', 'query'];
 
-  if (loading) {
-    return <LoadingView />;
-  }
-
-  const renderLaunchItem = ({item}: RenderItemParams) => {
-    return <LaunchItem name={item.name} key={item.id} />;
-  };
-
+const HomeScreen = ({navigation}: HomeScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
-      {!!data?.rockets && (
-        <FlatList data={data.rockets} renderItem={renderLaunchItem} />
-      )}
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContent}>
+        {/* {!!data?.launches && (
+        <FlatList data={data.launches} renderItem={renderLaunchItem} />
+      )} */}
+
+        {clients.map(client => (
+          <Card
+            text={client}
+            onPress={() => navigation.navigate(client)}
+            key={client}
+          />
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -40,8 +41,12 @@ const HomeScreen = ({}: HomeScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollViewContent: {
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 
