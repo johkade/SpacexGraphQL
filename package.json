@@ -30,7 +30,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@react-native-community/eslint-config": "^3.0.2",
-    "@types/react": "~18.0.1",
+    "@types/react": "~17.0.21",
     "@types/react-native": "~0.66.13",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",

@@ -9,10 +9,6 @@ export type HomeScreenProps = NativeStackScreenProps<
   'home'
 >;
 
-// const renderLaunchItem: ListRenderItem<Launch> = ({item, index}) => {
-//   return <LaunchItem name={item.mission_name} key={index.toString()} />;
-// };
-
 type RouteNameType = (keyof RootStackParamList)[];
 const clients: RouteNameType = ['apollo', 'relay', 'query'];
 
@@ -22,10 +18,6 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
-        {/* {!!data?.launches && (
-        <FlatList data={data.launches} renderItem={renderLaunchItem} />
-      )} */}
-
         {clients.map(client => (
           <Card
             text={client}

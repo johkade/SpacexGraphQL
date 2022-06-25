@@ -1,3 +1,4 @@
+import {useTheme} from '@react-navigation/native';
 import * as React from 'react';
 import {
   GestureResponderEvent,
@@ -7,17 +8,21 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
+import CText from '../c-text';
 
 export type CardProps = {
   text: string;
-  onPress: (evt: GestureResponderEvent) => void;
+  onPress?: (evt: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
 };
 
 const Card = ({text, onPress, style}: CardProps) => {
+  const {colors} = useTheme();
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, style]}>
-      <Text>{text}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.container, {backgroundColor: colors.primary}, style]}>
+      <CText text={text} />
     </TouchableOpacity>
   );
 };
@@ -29,7 +34,7 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#99aaff',
     minWidth: 300,
-    margin: 10,
+    margin: 4,
     borderRadius: 10,
   },
 });
