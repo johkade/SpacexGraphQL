@@ -1,11 +1,18 @@
 import {useApolloClient} from '@apollo/client';
 import {PlatformPressable} from '@react-navigation/elements';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import * as React from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
+import React, {Suspense} from 'react';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  View,
+} from 'react-native';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
 import CText from '../../components/c-text';
 import Card from '../../components/card';
+import LatestLaunch from '../../components/latest-launch';
 import {RootStackParamList} from '../../nav/rootStack/types';
 
 export type HomeScreenProps = NativeStackScreenProps<
@@ -33,9 +40,16 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           />
         ))}
 
-        <PlatformPressable onPress={() => apolloClient.resetStore()} tw="mt-12">
+        <PlatformPressable
+          onPress={() => apolloClient.resetStore()}
+          tw="mt-12 justify-center h-24">
           <CText text={'Reset Cache'} />
         </PlatformPressable>
+        <View tw="mt-24">
+          <Suspense fallback={<ActivityIndicator />}>
+            <LatestLaunch />
+          </Suspense>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
