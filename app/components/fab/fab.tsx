@@ -21,7 +21,7 @@ const FAB = ({onPress}: FABProps) => {
       }}>
       <PlatformPressable
         onPress={onPress}
-        tw="absolute bottom-16 right-4 bg-pink-500 w-12 h-12 rounded-full items-center justify-center shadow-md">
+        tw="absolute bottom-8 right-4 bg-pink-500 w-12 h-12 rounded-full items-center justify-center shadow-md">
         <CText text={'+'} />
       </PlatformPressable>
     </MotiView>

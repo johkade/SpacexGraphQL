@@ -1,20 +1,21 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
   SafeAreaView,
-  Text,
 } from 'react-native';
 import 'react-native-tailwind.macro';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
+import CText from '../../components/c-text';
 import FAB from '../../components/fab';
 import SwipeableUserDisplay from '../../components/swipeable-user-display';
 import {RootStackParamList} from '../../nav/rootStack/types';
 import {User} from '../../types/model';
 import getRandomName from '../../util/getRandomName';
+import {PlatformPressable} from '@react-navigation/elements';
 
 export type ApolloScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -57,13 +58,22 @@ const UPDATE_USER = gql`
 `;
 
 const ApolloScreen = ({}: ApolloScreenProps) => {
+  const [refreshing, setRefreshing] = useState(false);
   const {data, error, loading, refetch, networkStatus, fetchMore} = useQuery(
     USER_LIST_ENDLESS,
-    {variables: {limit: PAGE_SIZE, offset: 0}},
+    {
+      variables: {limit: PAGE_SIZE, offset: 0},
+      notifyOnNetworkStatusChange: true,
+    },
   );
   const [addUser] = useMutation(ADD_USER);
   const [deleteUser] = useMutation(DELETE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
+
+  const refresh = () => {
+    setRefreshing(true);
+    refetch().then(() => setRefreshing(false));
+  };
 
   const styles = useTailwindStyles(tw => ({
     flatListContent: tw`items-stretch px-2 py-2`,
@@ -93,6 +103,9 @@ const ApolloScreen = ({}: ApolloScreenProps) => {
   };
 
   const onEndReached = () => {
+    if (data.users.length < PAGE_SIZE) {
+      return;
+    }
     fetchMore({
       variables: {limit: PAGE_SIZE, offset: data.users?.length + 1},
       updateQuery: (prevResult, {fetchMoreResult}) => {
@@ -111,23 +124,40 @@ const ApolloScreen = ({}: ApolloScreenProps) => {
 
   return (
     <SafeAreaView tw="flex-1 bg-gray-800">
-      {!!data?.users && (
-        <FlatList
-          data={data.users}
-          renderItem={renderUser}
-          tw="flex-1"
-          contentContainerStyle={styles.flatListContent}
-          onRefresh={refetch}
-          refreshing={networkStatus === 4}
-          onEndReachedThreshold={0.5}
-          onEndReached={onEndReached}
-          ListFooterComponent={
-            loading ? <ActivityIndicator tw="mt-4" /> : <></>
-          }
-        />
-      )}
+      <FlatList
+        data={data?.users}
+        renderItem={renderUser}
+        tw="flex-1"
+        contentContainerStyle={styles.flatListContent}
+        onRefresh={refresh}
+        refreshing={refreshing}
+        onEndReachedThreshold={0.5}
+        onEndReached={onEndReached}
+        ListEmptyComponent={
+          <>
+            {!loading && networkStatus === 7 && (
+              <CText
+                text="no users found 🤷"
+                tw="self-center text-black dark:text-white font-bold text-lg mt-12"
+              />
+            )}
+          </>
+        }
+        ListFooterComponent={
+          <>
+            {loading && <ActivityIndicator tw="mt-4 self-center" />}
+            {networkStatus === 8 && (
+              <PlatformPressable onPress={() => refetch()}>
+                <CText
+                  text={error?.message ?? 'something went wrong' + '  ➡ Retry?'}
+                  tw="self-center text-lg text-black dark:text-white font-bold"
+                />
+              </PlatformPressable>
+            )}
+          </>
+        }
+      />
 
-      {error && <Text>{error.message}</Text>}
       <FAB onPress={addRandomUser} />
     </SafeAreaView>
   );
