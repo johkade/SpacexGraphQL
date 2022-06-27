@@ -1,6 +1,7 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {SafeAreaView, ScrollView} from 'react-native';
+import {useTailwindStyles} from 'react-native-tailwind.macro';
 import Card from '../../components/card';
 import {RootStackParamList} from '../../nav/rootStack/types';
 
@@ -13,11 +14,13 @@ type RouteNameType = (keyof RootStackParamList)[];
 const clients: RouteNameType = ['apollo', 'relay', 'query'];
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
+  const styles = useTailwindStyles(tw => ({
+    SVContent: tw`items-center`,
+  }));
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}>
+    <SafeAreaView tw="flex-1 bg-white dark:bg-black">
+      <ScrollView tw="flex-1" contentContainerStyle={styles.SVContent}>
         {clients.map(client => (
           <Card
             text={client}
@@ -29,17 +32,5 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    alignItems: 'center',
-  },
-});
 
 export default HomeScreen;

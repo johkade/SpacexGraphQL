@@ -1,30 +1,45 @@
-import React from 'react';
-import {DarkTheme, NavigationContainer} from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from '../../screens/home';
+import React from 'react';
+import {useColorScheme} from 'react-native';
+import {TailwindProvider} from 'react-native-tailwind.macro';
 import ApolloScreen from '../../screens/apollo';
-import RelayScreen from '../../screens/relay';
-import QueryScreen from '../../screens/query';
+import HomeScreen from '../../screens/home';
 import LaunchDetailsScreen from '../../screens/launch-details';
+import QueryScreen from '../../screens/query';
+import RelayScreen from '../../screens/relay';
 import {RootStackParamList} from './types';
 
 const RootStackNav = createNativeStackNavigator<RootStackParamList>();
 
-const RootStack = () => {
-  return (
-    <NavigationContainer theme={DarkTheme}>
-      <RootStackNav.Navigator>
-        <RootStackNav.Screen name={'home'} component={HomeScreen} />
-        <RootStackNav.Screen name={'apollo'} component={ApolloScreen} />
-        <RootStackNav.Screen name={'relay'} component={RelayScreen} />
-        <RootStackNav.Screen name={'query'} component={QueryScreen} />
+const themeDict = {
+  light: DefaultTheme,
+  dark: DarkTheme,
+};
 
-        <RootStackNav.Screen
-          name={'launchDetails'}
-          component={LaunchDetailsScreen}
-        />
-      </RootStackNav.Navigator>
-    </NavigationContainer>
+const RootStack = () => {
+  const scheme = useColorScheme();
+
+  return (
+    <TailwindProvider dark={scheme === 'dark'}>
+      <NavigationContainer theme={themeDict[scheme ?? 'light']}>
+        <RootStackNav.Navigator>
+          <RootStackNav.Screen name={'home'} component={HomeScreen} />
+          <RootStackNav.Screen name={'apollo'} component={ApolloScreen} />
+          <RootStackNav.Screen name={'relay'} component={RelayScreen} />
+          <RootStackNav.Screen name={'query'} component={QueryScreen} />
+
+          <RootStackNav.Screen
+            name={'launchDetails'}
+            component={LaunchDetailsScreen}
+          />
+        </RootStackNav.Navigator>
+      </NavigationContainer>
+    </TailwindProvider>
   );
 };
 

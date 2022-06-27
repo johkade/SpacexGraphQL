@@ -1,24 +1,15 @@
-import {useTheme} from '@react-navigation/native';
 import React from 'react';
-import {StyleProp, StyleSheet, Text, ViewStyle} from 'react-native';
+import {Text} from 'react-native';
+import 'react-native-tailwind.macro';
 
 export type CTextProps = {
   text: string;
-  style?: StyleProp<ViewStyle>;
 };
 
-const CText = ({style, text}: CTextProps) => {
-  const {colors} = useTheme();
-  return <Text style={[styles.text, {color: colors.text}, style]}>{text}</Text>;
+const CText = ({text}: CTextProps) => {
+  return (
+    <Text tw="text-lg text-black dark:text-white font-medium">{text}</Text>
+  );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: 'Verdana',
-    fontSize: 13,
-    fontWeight: '500',
-    letterSpacing: 0.2,
-  },
-});
 
 export default CText;

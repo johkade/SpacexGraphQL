@@ -8,9 +8,11 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  View,
 } from 'react-native';
 import Card from '../../components/card';
 import {RootStackParamList} from '../../nav/rootStack/types';
+import 'react-native-tailwind.macro';
 
 export type ApolloScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -88,6 +90,7 @@ const ApolloScreen = ({}: ApolloScreenProps) => {
           addUser({variables: {name: 'Dude' + Math.round(Math.random() * 10)}})
         }
       />
+      <View tw="h-5 w-10 rounded-xl bg-gray-300 self-center johkade" />
       {!!data?.users && (
         <FlatList
           data={data.users}

@@ -1,42 +1,28 @@
-import {useTheme} from '@react-navigation/native';
+import {PlatformPressable} from '@react-navigation/elements';
 import * as React from 'react';
-import {
-  GestureResponderEvent,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native';
+import {GestureResponderEvent} from 'react-native';
+import 'react-native-tailwind.macro';
+import {useTailwindStyles} from 'react-native-tailwind.macro';
 import CText from '../c-text';
 
 export type CardProps = {
   text: string;
   onPress?: (evt: GestureResponderEvent) => void;
-  style?: StyleProp<ViewStyle>;
 };
 
-const Card = ({text, onPress, style}: CardProps) => {
-  const {colors} = useTheme();
+const Card = ({text, onPress}: CardProps) => {
+  const styles = useTailwindStyles(tw => ({
+    ripple: tw`text-white`,
+  }));
   return (
-    <TouchableOpacity
+    <PlatformPressable
       onPress={onPress}
-      style={[styles.container, {backgroundColor: colors.primary}, style]}>
+      pressOpacity={0.6}
+      android_ripple={styles.ripple}
+      tw="bg-purple-600 dark:bg-custom-600 rounded-lg px-3 py-1 m-1 self-stretch items-center shadow-sm">
       <CText text={text} />
-    </TouchableOpacity>
+    </PlatformPressable>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#99aaff',
-    minWidth: 300,
-    margin: 4,
-    borderRadius: 10,
-  },
-});
 
 export default Card;
