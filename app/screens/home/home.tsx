@@ -2,13 +2,7 @@ import {useApolloClient} from '@apollo/client';
 import {PlatformPressable} from '@react-navigation/elements';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {Suspense} from 'react';
-import {
-  ActivityIndicator,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  View,
-} from 'react-native';
+import {ActivityIndicator, SafeAreaView, ScrollView, View} from 'react-native';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
 import CText from '../../components/c-text';
 import Card from '../../components/card';
