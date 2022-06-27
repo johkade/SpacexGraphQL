@@ -1,7 +1,6 @@
 import {PlatformPressable} from '@react-navigation/elements';
 import * as React from 'react';
 import {GestureResponderEvent} from 'react-native';
-import 'react-native-tailwind.macro';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
 import CText from '../c-text';
 

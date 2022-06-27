@@ -7,9 +7,7 @@ export type CTextProps = {
 };
 
 const CText = ({text}: CTextProps) => {
-  return (
-    <Text tw="text-lg text-black dark:text-white font-medium">{text}</Text>
-  );
+  return <Text tw="text-lg text-black dark:text-white font-bold">{text}</Text>;
 };
 
 export default CText;

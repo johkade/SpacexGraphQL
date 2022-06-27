@@ -1,7 +1,10 @@
+import {useApolloClient} from '@apollo/client';
+import {PlatformPressable} from '@react-navigation/elements';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
+import CText from '../../components/c-text';
 import Card from '../../components/card';
 import {RootStackParamList} from '../../nav/rootStack/types';
 
@@ -14,6 +17,7 @@ type RouteNameType = (keyof RootStackParamList)[];
 const clients: RouteNameType = ['apollo', 'relay', 'query'];
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
+  const apolloClient = useApolloClient();
   const styles = useTailwindStyles(tw => ({
     SVContent: tw`items-center`,
   }));
@@ -28,6 +32,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             key={client}
           />
         ))}
+
+        <PlatformPressable onPress={() => apolloClient.resetStore()} tw="mt-12">
+          <CText text={'Reset Cache'} />
+        </PlatformPressable>
       </ScrollView>
     </SafeAreaView>
   );

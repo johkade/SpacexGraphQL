@@ -1,27 +1,31 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
   SafeAreaView,
-  StyleSheet,
   Text,
-  View,
 } from 'react-native';
-import Card from '../../components/card';
-import {RootStackParamList} from '../../nav/rootStack/types';
 import 'react-native-tailwind.macro';
+import {useTailwindStyles} from 'react-native-tailwind.macro';
+import FAB from '../../components/fab';
+import SwipeableUserDisplay from '../../components/swipeable-user-display';
+import {RootStackParamList} from '../../nav/rootStack/types';
+import {User} from '../../types/model';
+import getRandomName from '../../util/getRandomName';
 
 export type ApolloScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'apollo'
 >;
 
-const USER_LIST = gql`
-  query Users {
-    users {
+const PAGE_SIZE = 30;
+
+const USER_LIST_ENDLESS = gql`
+  query Users($limit: Int!, $offset: Int!) {
+    users(order_by: {timestamp: asc}, offset: $offset, limit: $limit) {
       id
       name
     }
@@ -37,7 +41,6 @@ const ADD_USER = gql`
     }
   }
 `;
-
 const DELETE_USER = gql`
   mutation DeleteUser($id: uuid) {
     delete_users(where: {id: {_eq: $id}}) {
@@ -45,7 +48,6 @@ const DELETE_USER = gql`
     }
   }
 `;
-
 const UPDATE_USER = gql`
   mutation DeleteUser($id: uuid, $name: String) {
     update_users(where: {id: {_eq: $id}}, _set: {name: $name}) {
@@ -54,72 +56,85 @@ const UPDATE_USER = gql`
   }
 `;
 
-type User = {
-  id: string;
-  name: string;
-};
-
 const ApolloScreen = ({}: ApolloScreenProps) => {
-  const {data, error, loading, refetch} = useQuery(USER_LIST);
+  const {data, error, loading, refetch, networkStatus, fetchMore} = useQuery(
+    USER_LIST_ENDLESS,
+    {variables: {limit: PAGE_SIZE, offset: 0}},
+  );
   const [addUser] = useMutation(ADD_USER);
   const [deleteUser] = useMutation(DELETE_USER);
   const [updateUser] = useMutation(UPDATE_USER);
-  const [refreshing, setRefreshing] = useState(false);
 
-  const refresh = async () => {
-    setRefreshing(true);
-    await refetch().catch(() => {});
-    setRefreshing(false);
+  const styles = useTailwindStyles(tw => ({
+    flatListContent: tw`items-stretch px-2 py-2`,
+  }));
+
+  const updateUserWithNewName = (item: User) => {
+    const newName = item.name + '🔥';
+    updateUser({variables: {id: item.id, name: newName}}).then(() => refetch());
   };
 
   const renderUser: ListRenderItem<User> = ({item}) => {
     return (
-      <Card
-        text={item.name}
+      <SwipeableUserDisplay
+        displayName={item.name}
         key={item.id}
-        onPress={() => deleteUser({variables: {id: item.id}})}
+        onDelete={() => {
+          deleteUser({variables: {id: item.id}}).then(() => refetch());
+        }}
+        onUpdateNamePress={() => updateUserWithNewName(item)}
       />
     );
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Card
-        text={'addUser'}
-        onPress={() =>
-          addUser({variables: {name: 'Dude' + Math.round(Math.random() * 10)}})
+  const addRandomUser = () => {
+    const payload = {variables: {name: getRandomName()}};
+    addUser(payload).then(() => refetch());
+  };
+
+  const onEndReached = () => {
+    fetchMore({
+      variables: {limit: PAGE_SIZE, offset: data.users?.length + 1},
+      updateQuery: (prevResult, {fetchMoreResult}) => {
+        const noNewItemsReceived =
+          !fetchMoreResult || !fetchMoreResult.users?.length;
+        if (noNewItemsReceived) {
+          return prevResult;
         }
-      />
-      <View tw="h-5 w-10 rounded-xl bg-gray-300 self-center johkade" />
+        const combinedUsers = [...prevResult.users, ...fetchMoreResult.users];
+        const uniqueUsers = getUniqueListBy(combinedUsers, 'id');
+
+        return {users: uniqueUsers};
+      },
+    });
+  };
+
+  return (
+    <SafeAreaView tw="flex-1 bg-gray-800">
       {!!data?.users && (
         <FlatList
           data={data.users}
           renderItem={renderUser}
-          style={styles.flatList}
+          tw="flex-1"
           contentContainerStyle={styles.flatListContent}
-          onRefresh={refresh}
-          refreshing={refreshing}
+          onRefresh={refetch}
+          refreshing={networkStatus === 4}
+          onEndReachedThreshold={0.5}
+          onEndReached={onEndReached}
+          ListFooterComponent={
+            loading ? <ActivityIndicator tw="mt-4" /> : <></>
+          }
         />
       )}
-      {loading && <ActivityIndicator style={styles.spinner} />}
 
-      {error && <Text>Something went wrong</Text>}
+      {error && <Text>{error.message}</Text>}
+      <FAB onPress={addRandomUser} />
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  flatList: {
-    flex: 1,
-  },
-  flatListContent: {
-    alignItems: 'center',
-  },
-  spinner: {
-    marginTop: 100,
-  },
-});
 
 export default ApolloScreen;
+
+function getUniqueListBy(arr: any[], key: string) {
+  return [...new Map(arr.map(item => [item[key], item])).values()];
+}

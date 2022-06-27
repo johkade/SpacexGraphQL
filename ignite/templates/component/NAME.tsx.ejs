@@ -1,22 +1,17 @@
 import * as React from 'react';
-import {StyleProp, View, ViewStyle, StyleSheet} from 'react-native';
+import {View} from 'react-native';
+import 'react-native-tailwind.macro';
 
 export type <%= props.pascalCaseName %>Props = {
-  style?: StyleProp<ViewStyle>;
+  //
 };
 
-const <%= props.pascalCaseName %> = ({style}: <%= props.pascalCaseName %>Props) => {
+const <%= props.pascalCaseName %> = ({}: <%= props.pascalCaseName %>Props) => {
   return (
-    <View style={[styles.container, style]}>
+    <View tw="">
       <View />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    //
-  },
-});
 
 export default <%= props.pascalCaseName %>;
