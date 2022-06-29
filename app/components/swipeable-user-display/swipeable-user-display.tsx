@@ -14,7 +14,7 @@ export type SwipeableUserDisplayProps = {
   onUpdateNamePress?: () => void;
 };
 
-const RightAction = ({onDelete}: {onDelete: () => void}) => {
+const ActionComp = ({onDelete}: {onDelete: () => void}) => {
   return (
     <PlatformPressable
       onPress={onDelete}
@@ -44,7 +44,9 @@ const SwipeableUserDisplay = ({
   return (
     <GestureHandlerRootView>
       <Swipeable
-        renderRightActions={() => <RightAction onDelete={onDelete} />}
+        friction={2}
+        renderRightActions={() => <ActionComp onDelete={onDelete} />}
+        renderLeftActions={() => <ActionComp onDelete={onDelete} />}
         ref={ref}
         onSwipeableOpen={() => setOpen(true)}
         onSwipeableClose={() => setOpen(false)}>

@@ -10,11 +10,16 @@ export type LatestLaunchProps = {
 };
 
 const LatestLaunch = ({}: LatestLaunchProps) => {
-  const {data: launch} = useQuery('latestLaunch', fetchLatestLaunch);
+  const {data: launch, error} = useQuery('latestLaunch', fetchLatestLaunch, {
+    useErrorBoundary: false,
+  });
 
   return (
     <View tw="rounded-md bg-gray-800 p-8">
-      <CText text={launch?.mission_name ?? '?'} />
+      <CText
+        text={error?.message?.substr(0, 16) ?? launch?.mission_name ?? '?'}
+        nol={1}
+      />
     </View>
   );
 };

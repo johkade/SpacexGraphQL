@@ -1,6 +1,7 @@
 import {useApolloClient} from '@apollo/client';
 import {PlatformPressable} from '@react-navigation/elements';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {MotiView} from 'moti';
 import React, {Suspense} from 'react';
 import {ActivityIndicator, SafeAreaView, ScrollView, View} from 'react-native';
 import {useTailwindStyles} from 'react-native-tailwind.macro';
@@ -41,7 +42,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         </PlatformPressable>
         <View tw="mt-24">
           <Suspense fallback={<ActivityIndicator />}>
-            <LatestLaunch />
+            <MotiView
+              from={{opacity: 0, transform: [{translateY: -50}]}}
+              animate={{opacity: 1, transform: [{translateY: 0}]}}
+              transition={{type: 'timing', duration: 1000}}>
+              <LatestLaunch />
+            </MotiView>
           </Suspense>
         </View>
       </ScrollView>
